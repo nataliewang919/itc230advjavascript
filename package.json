@@ -1,0 +1,22 @@
+{
+  "name": "advjavascript",
+  "version": "1.0.0",
+  "description": "adv javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nataliewang919/itc230advjavascript.git"
+  },
+  "keywords": [
+    "javascript"
+  ],
+  "author": "Han Wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nataliewang919/itc230advjavascript/issues"
+  },
+  "homepage": "https://github.com/nataliewang919/itc230advjavascript#readme"
+}
