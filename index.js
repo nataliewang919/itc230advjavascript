@@ -45,7 +45,7 @@ case '/get':
 case '/delete':
         var movie=movies.delete(params.title)
         res.writeHead(200,{'Content-Type':'text/plain '})
-        res.end(JSON.stringify(movie));
+        res.end('You are deleting for '+params.title+"\n"+JSON.stringify(movie));
         break;
 
 default:
