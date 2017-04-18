@@ -33,7 +33,7 @@ case '/about':
         break;
 
 case '/get':
-        var movie = movies.get(params.title)
+        var movie = movies.get(params.title)        
         res.writeHead(200,{'Content-Type':'text/plain '})
         if(movie==undefined){
             res.end('error:no record has been found')
@@ -43,9 +43,9 @@ case '/get':
         break;
         
 case '/delete':
-        var remainmovie=movies.remain(params.title)
+        var movie=movies.delete(params.title)
         res.writeHead(200,{'Content-Type':'text/plain '})
-        res.end('The '+params.title+' has been deleted'+"\n"+'Total '+remainmovie.length+' movies remain');
+        res.end(JSON.stringify(movie));
         break;
 
 default:
