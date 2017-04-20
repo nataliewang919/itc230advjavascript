@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/nataliewang919/itc230advjavascript/issues"
   },
-  "homepage": "https://github.com/nataliewang919/itc230advjavascript#readme"
+  "homepage": "https://github.com/nataliewang919/itc230advjavascript#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }

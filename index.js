@@ -1,7 +1,9 @@
+'use strict'
 var http = require("http"), 
     fs=require("fs"),
-    qs=require("querystring"),
-    movies=require("./lib/movies");
+    qs=require("querystring");
+let movies=require("./lib/movies");
+
 
 function serveStaticFile(res,path, contentType, responseCode){
     if(!responseCode)responseCode=200;
@@ -19,9 +21,9 @@ function serveStaticFile(res,path, contentType, responseCode){
 
 http.createServer(function(req,res) {
 
-var url=req.url.split("?")
-var params=qs.parse(url[1]);
-var path=url[0].toLowerCase();
+let url=req.url.split("?")
+let params=qs.parse(url[1]);
+let path=url[0].toLowerCase();
     
 switch(path){
 case '/':
@@ -33,16 +35,16 @@ case '/about':
         break;
 
 case '/get':
-        var movie = movies.get(params.title)        
+        let movie = movies.get(params.title)        
         res.writeHead(200,{'Content-Type':'text/plain '})        
         let results = (movie) ? JSON.stringify(movie) : "Not found";
         res.end('You are searching for '+params.title+"\n"+'The detail information is '+results);
         break;
         
 case '/delete':
-        var movie=movies.delete(params.title)
+        let deletemovie=movies.delete(params.title)
         res.writeHead(200,{'Content-Type':'text/plain '})
-        res.end('You are deleting for '+params.title+"\n"+JSON.stringify(movie));
+        res.end('You are deleting for '+params.title+"\n"+JSON.stringify(deletemovie));
         break;
 
 default:
