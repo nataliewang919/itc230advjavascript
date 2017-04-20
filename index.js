@@ -34,12 +34,9 @@ case '/about':
 
 case '/get':
         var movie = movies.get(params.title)        
-        res.writeHead(200,{'Content-Type':'text/plain '})
-        if(movie==undefined){
-            res.end('error:no record has been found')
-        }
-        else{
-        res.end('You are searching for '+params.title+"\n"+'The detail information is '+JSON.stringify(movie))};
+        res.writeHead(200,{'Content-Type':'text/plain '})        
+        let results = (movie) ? JSON.stringify(movie) : "Not found";
+        res.end('You are searching for '+params.title+"\n"+'The detail information is '+results);
         break;
         
 case '/delete':
