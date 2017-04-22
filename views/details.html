@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <a href="/">Home</a>
+{{#if result}}
+    <header>{{pageheader}}</header>
+    <h2>{{title}} movie details</h2>
+    <li>Title: {{result.title}}</li>
+    <li>Director: {{result.director}}</li>
+    <li>Reldate: {{result.reldate}}</li>
+    <p>
+    <a href="/delete?title={{result.title}}">Delete</a>
+    </p>
+{{else}}
+        <h2>{{title}} not found</h2>
+{{/if}}
+
+    </body>
+</html>

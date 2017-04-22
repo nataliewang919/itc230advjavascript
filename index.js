@@ -1,55 +1,40 @@
 'use strict'
-var http = require("http"), 
-    fs=require("fs"),
-    qs=require("querystring");
+
 let movies=require("./lib/movies");
+const express = require("express");
+const app = express();
 
+app.set('port', process.env.PORT || 3000);
+app.use(express.static(__dirname + '/public'));
+app.use(require("body-parser").urlencoded({extended: true}));
 
-function serveStaticFile(res,path, contentType, responseCode){
-    if(!responseCode)responseCode=200;
-    fs.readFile(__dirname+path, function(err,data){
-            if(err){
-              res.writeHead(500, {'content-Type':'text/plain'});
-              res.send('500-internal error');
-}else{
-              res.writeHead(responseCode,
-                 {'Content-Type':contentType});
-              res.end(data);
-}
-    });
-}
+let handlebars =  require("express-handlebars");
+app.engine(".html", handlebars({extname: '.html'}));
+app.set("view engine", ".html");
 
-http.createServer(function(req,res) {
+app.get('/', function(req,res){
+    res.type('text/html');
+    res.sendFile(__dirname + '/public/home.html'); 
+});
 
-let url=req.url.split("?")
-let params=qs.parse(url[1]);
-let path=url[0].toLowerCase();
-    
-switch(path){
-case '/':
-        serveStaticFile(res, '/public/home.html','text/html');
-        break;
-        
-case '/about':
-        serveStaticFile(res, '/public/about.html','text/html');
-        break;
+app.get('/delete', function(req,res){    
+    let result= movies.delete(req.query.title); 
+    console.log(result.totalremain);
+    res.render('delete', {title: req.query.title, result: result});   
+});
 
-case '/get':
-        let movie = movies.get(params.title)        
-        res.writeHead(200,{'Content-Type':'text/plain '})        
-        let results = (movie) ? JSON.stringify(movie) : "Not found";
-        res.end('You are searching for '+params.title+"\n"+'The detail information is '+results);
-        break;
-        
-case '/delete':
-        let deletemovie=movies.delete(params.title)
-        res.writeHead(200,{'Content-Type':'text/plain '})
-        res.end('You are deleting for '+params.title+"\n"+JSON.stringify(deletemovie));
-        break;
+app.post('/get', function(req,res){
+    let header = 'Searching for the movie: ' + req.body.title;
+    let found = movies.get(req.body.title);
+    res.render('details', {title: req.body.title, result: found, pageheader: header});
+});
 
-default:
-        serveStaticFile(res, '/public/404.html','text/html',404);
-        break; 
-}
-    
-}).listen(process.env.PORT || 3000);
+app.use(function(req,res) {
+    res.type('text/plain'); 
+    res.status(404);
+    res.send('404 - Not found');
+});
+
+app.listen(app.get('port'), function() {
+    console.log('Express started');    
+});
