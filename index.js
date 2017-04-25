@@ -17,6 +17,11 @@ app.get('/', function(req,res){
     res.sendFile(__dirname + '/public/home.html'); 
 });
 
+app.get('/about', function(req,res){
+    res.type('text/plain');
+    res.send('About page');
+});
+
 app.get('/delete', function(req,res){    
     let result= movies.delete(req.query.title); 
     console.log(result.totalremain);
