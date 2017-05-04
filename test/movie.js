@@ -28,7 +28,7 @@ it ("succefully added the movie", ()=>{
 });
     
 it ("fails because the movie is already in the list", ()=>{
-    var result=movies.add({title: "forrest gump",director:"robert",reldate:1994});
+    var result=movies.add({title: "the godfather",director:"francis",reldate:1972});
      expect(result.added).to.be.false;
 });
     
