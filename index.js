@@ -9,17 +9,25 @@ app.use(express.static(__dirname + '/public'));
 app.use(require("body-parser").urlencoded({extended: true}));
 
 let handlebars =  require("express-handlebars");
-app.engine(".html", handlebars({extname: '.html'}));
+app.engine(".html", handlebars({extname: '.html', defaultLayout:'main'}));
 app.set("view engine", ".html");
 
 app.get('/', function(req,res){
-    res.type('text/html');
-    res.sendFile(__dirname + '/public/home.html'); 
+    let show=movies.getAll();
+    res.type('text/html');    
+    res.render('home',{movie:show, title:show.title});     
 });
 
+app.get('/get', function(req,res){
+    let header = 'Searching for the movie: ' + req.query.title;
+    let found = movies.get(req.query.title);
+    res.type('text/html');  
+    res.render('details', {title: req.query.title, result: found, pageheader: header});
+});
+        
 app.get('/about', function(req,res){
-    res.type('text/plain');
-    res.send('About page');
+    res.type('text/html');
+    res.render('about');
 });
 
 app.get('/delete', function(req,res){    

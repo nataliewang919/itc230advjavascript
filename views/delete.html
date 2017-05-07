@@ -1,12 +1,11 @@
-<html>
-    <body>
+
         <a href="/">Home</a>
 {{#if result.deleted}}
-    <h2>{{title}} has been deleted</h2>
-    remaining total movies: {{result.totalremain}}
+    <h3>{{title}} has been deleted</h3>
+    Remaining total movies: {{result.totalremain}}
+<p></p>
 {{else}}
     <h2>{{title}} not found</h2>
 {{/if}}
 
-    </body>
-</html>
+   
