@@ -15,7 +15,7 @@ app.set("view engine", ".html");
 app.get('/', function(req,res){
     let show=movies.getAll();
     res.type('text/html');    
-    res.render('home',{movie:show, title:show.title});     
+    res.render('home',{movie:show});     
 });
 
 app.get('/get', function(req,res){
