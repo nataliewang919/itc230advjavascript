@@ -13,8 +13,8 @@ let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html', defaultLayout:'main'}));
 app.set("view engine", ".html");
 
-app.get('/', function(req,res){
-     Movies.find({},function(err, movies){              
+app.get('/', (req,res)=>{
+     Movies.find({},(err, movies)=>{              
     if (err) return next(err);   
     //if (!movies) return next();
     //console.log(movies.length);
@@ -23,8 +23,8 @@ app.get('/', function(req,res){
     });    
 });
 
-app.post('/get', function(req,res){
-     Movies.findOne({title: req.body.title},function(err, movies){     
+app.post('/get', (req,res)=>{
+     Movies.findOne({title: req.body.title},(err, movies)=>{     
    if (err) return next(err);   
    //if (!movies) return next();              
     res.type('text/html');  
@@ -32,15 +32,15 @@ app.post('/get', function(req,res){
     });      
 });
 
-app.get('/about', function(req,res){
+app.get('/about', (req,res)=>{
     res.type('text/html');
     res.render('about');
 });
 
-app.get('/delete', function(req,res){    
-    Movies.findOneAndRemove({title: req.query.title},function(err, movies){             
+app.get('/delete', (req,res)=>{    
+    Movies.findOneAndRemove({title: req.query.title},(err, movies)=>{             
     if (err) return next(err);                                  
-    Movies.count({},function(err,count){
+    Movies.count({},(err,count)=>{
     //console.log(count);
     res.type('text/html'); 
     res.render('delete', {title: req.query.title, result: count});  
@@ -48,8 +48,8 @@ app.get('/delete', function(req,res){
             });                             
     });
 
-app.get('/get', function(req,res){
-    Movies.findOne({title: req.query.title},function(err, movies){     
+app.get('/get', (req,res)=>{
+    Movies.findOne({title: req.query.title},(err, movies)=>{     
     if (err) return next(err);                                  
     //if(!movies) return next(); 
     res.type('text/html');  
@@ -57,7 +57,7 @@ app.get('/get', function(req,res){
     });      
 });
 
-app.use(function(req,res) {
+app.use((req,res)=>{
     res.type('text/plain'); 
     res.status(404);
     res.send('404 - Not found');
