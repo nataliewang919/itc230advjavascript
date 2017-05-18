@@ -37,13 +37,21 @@ app.get('/about', (req,res)=>{
     res.render('about');
 });
 
+
+
 app.get('/delete', (req,res)=>{    
     Movies.findOneAndRemove({title: req.query.title},(err, movies)=>{             
     if (err) return next(err);                                  
     Movies.count({},(err,count)=>{
     //console.log(count);
+    if(err) return next(err);
+    if(count==0){
     res.type('text/html'); 
-    res.render('delete', {title: req.query.title, result: count});  
+    res.render('delete', {title: req.query.title, result: 'zero'});   
+    }else{
+    res.type('text/html'); 
+    res.render('delete', {title: req.query.title, result: count});
+    }
         })  
             });                             
     });
