@@ -1,6 +1,7 @@
 'use strict'
 
 //let movies=require("./lib/movies");
+var http=require('http');
 var Movies = require("./models/moviedata");
 const express = require("express");
 const app = express();
@@ -9,9 +10,97 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 app.use(require("body-parser").urlencoded({extended: true}));
 
+app.use('/api', require('cors')());
+
 let handlebars =  require("express-handlebars");
 app.engine(".html", handlebars({extname: '.html', defaultLayout:'main'}));
 app.set("view engine", ".html");
+
+//api routes
+app.get('/api/v1/movies', (req,res)=>{
+    Movies.find({},(err, movies)=>{              
+    
+    if(movies)
+    {
+        res.json(movies);
+    }
+    else
+    {
+        res.status(404).send('404 Error');
+    }  
+        
+    });    
+});
+
+app.post('/api/v1/movies/:title', (req,res)=>{
+Movies.findOne({title: req.params.title},(err, movies)=>{     
+   if(movies)
+   {
+        res.json(movies);
+    }
+    
+    else
+    {
+        res.status(404).send('404 Error');
+    }   
+    
+    });      
+});
+
+
+app.get('/api/v1/movies/delete/:title', (req,res)=>{    
+    Movies.remove({title: req.params.title},(err, result)=>{  
+        
+        if(err)
+    {
+        res.status(404).send('404 Error');
+    } 
+        
+    else
+    {
+        //console.log(result)
+        res.json({deleted: result.result.n});   
+    }                                                                     
+            });                             
+    });
+
+app.get('/api/v1/movies/:title', (req,res)=>{
+    Movies.findOne({title: req.params.title},(err, movies)=>{     
+   if(movies)
+   {
+        res.json(movies);
+   }
+    else
+    {
+        res.status(404).send('404 Error');
+    }  
+        
+    });      
+});
+
+app.get('/api/v1/movies/add/:title/:director?/:reldate?', (req,res)=>{
+console.log(req.params);
+let director = req.params.director || "";
+let reldate = req.params.reldate || "";
+
+var movie=new Movies({title: req.params.title,director: director,reldate: reldate}); 
+movie.save(movie, (err,result)=>{        
+       
+    if(err)
+   {
+     res.status(404).send('404 Error');
+   }
+    else
+    {
+    //console.log(result);
+    res.json({added: result});
+     
+    }
+    });      
+});
+
+//end api routes        
+
 
 app.get('/', (req,res)=>{
      Movies.find({},(err, movies)=>{              
@@ -74,6 +163,8 @@ app.use((req,res)=>{
 app.listen(app.get('port'), function() {
     console.log('Express started');    
 });
+
+
 /*
 app.get('/', function(req,res){
     let show=movies.getAll();
