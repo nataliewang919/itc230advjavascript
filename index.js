@@ -17,43 +17,43 @@ app.engine(".html", handlebars({extname: '.html', defaultLayout:'main'}));
 app.set("view engine", ".html");
 
 //api routes
-app.get('/api/v1/movies', (req,res)=>{
+app.get('/api/v1/movies', (req,res,next)=>{
     Movies.find({},(err, movies)=>{              
     
-    if(movies)
+    if(err||!movies)
     {
-        res.json(movies);
+      return next(err);
     }
     else
     {
-        res.status(404).send('404 Error');
+        res.json(movies);
     }  
         
     });    
 });
 
-app.post('/api/v1/movies/:title', (req,res)=>{
+app.post('/api/v1/movie/:title', (req,res,next)=>{
 Movies.findOne({title: req.params.title},(err, movies)=>{     
-   if(movies)
+   if(err||!movies)
    {
-        res.json(movies);
+        return next(err);
     }
     
     else
     {
-        res.status(404).send('404 Error');
+        res.json(movies);
     }   
     
     });      
 });
 
 
-app.get('/api/v1/movies/delete/:title', (req,res)=>{    
+app.get('/api/v1/delete/:title', (req,res, next)=>{    
     Movies.remove({title: req.params.title},(err, result)=>{  
         
         if(err)
     {
-        res.status(404).send('404 Error');
+       return next (err);
     } 
         
     else
@@ -64,39 +64,30 @@ app.get('/api/v1/movies/delete/:title', (req,res)=>{
             });                             
     });
 
-app.get('/api/v1/movies/:title', (req,res)=>{
-    Movies.findOne({title: req.params.title},(err, movies)=>{     
-   if(movies)
+app.get('/api/v1/movie/:title', (req,res,next)=>{
+   Movies.findOne({title: req.params.title},(err, movies)=>{     
+   if(err||!movies)
    {
-        res.json(movies);
-   }
+        return next(err);
+    }
+    
     else
     {
-        res.status(404).send('404 Error');
-    }  
-        
+        res.json(movies);
+    }   
+    
     });      
 });
 
-app.get('/api/v1/movies/add/:title/:director?/:reldate?', (req,res)=>{
-console.log(req.params);
-let director = req.params.director || "";
-let reldate = req.params.reldate || "";
+app.get('/api/v1/add/:title/:director?/:reldate?', (req,res,next)=>{
+//console.log(req.params);
 
-var movie=new Movies({title: req.params.title,director: director,reldate: reldate}); 
-movie.save(movie, (err,result)=>{        
-       
-    if(err)
-   {
-     res.status(404).send('404 Error');
-   }
-    else
-    {
-    //console.log(result);
-    res.json({added: result});
-     
-    }
-    });      
+let title=req.params.title;
+Movies.update({title: title}, {title:title, director: req.params.director, reldate: req.params.reldate }, {upsert: true }, (err, result) => {
+        if (err) return next(err);
+        // nModified = 0 for new item, = 1+ for updated item 
+        res.json({updated: result.nModified});
+    });
 });
 
 //end api routes        
